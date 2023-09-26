@@ -160,7 +160,9 @@ export function renameQuestionById(
     newName: string
 ): Question[] {
     const deepCopyArray = JSON.parse(JSON.stringify(questions));
-    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    const foundObject = deepCopyArray.find(
+        (obj: { id: number }) => obj.id === targetId
+    );
     foundObject.name = newName;
     return deepCopyArray;
 }
@@ -178,7 +180,9 @@ export function changeQuestionTypeById(
     newQuestionType: QuestionType
 ): Question[] {
     const deepCopyArray = JSON.parse(JSON.stringify(questions));
-    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    const foundObject = deepCopyArray.find(
+        (obj: { id: number }) => obj.id === targetId
+    );
     foundObject.type = newQuestionType;
     if (newQuestionType !== "multiple_choice_question") {
         foundObject.options = [];
@@ -203,7 +207,9 @@ export function editOption(
     newOption: string
 ): Question[] {
     const deepCopyArray = JSON.parse(JSON.stringify(questions));
-    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    const foundObject = deepCopyArray.find(
+        (obj: { id: number }) => obj.id === targetId
+    );
     if (targetOptionIndex === -1) {
         foundObject.options.push(newOption);
     } else {
@@ -224,9 +230,13 @@ export function duplicateQuestionInArray(
     newId: number
 ): Question[] {
     const deepCopyArray = JSON.parse(JSON.stringify(questions));
-    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    const foundObject = deepCopyArray.find(
+        (obj: { id: number }) => obj.id === targetId
+    );
     const objCopy = duplicateQuestion(newId, foundObject);
-    const index = deepCopyArray.findIndex((obj) => obj.id === targetId);
+    const index = deepCopyArray.findIndex(
+        (obj: { id: number }) => obj.id === targetId
+    );
     deepCopyArray.splice(index + 1, 0, objCopy);
     return deepCopyArray;
 }
