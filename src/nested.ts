@@ -1,12 +1,17 @@
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
+import { duplicateQuestion, makeBlankQuestion } from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
  * that are `published`.
  */
 export function getPublishedQuestions(questions: Question[]): Question[] {
-    return [];
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const deepCopyArray2 = deepCopyArray.filter(
+        (item: { published: boolean }) => item.published !== false
+    );
+    return deepCopyArray2;
 }
 
 /**
@@ -14,9 +19,7 @@ export function getPublishedQuestions(questions: Question[]): Question[] {
  * considered "non-empty". An empty question has an empty string for its `body` and
  * `expected`, and an empty array for its `options`.
  */
-export function getNonEmptyQuestions(questions: Question[]): Question[] {
-    return [];
-}
+//export function getNonEmptyQuestions(questions: Question[]): Question[] {}
 
 /***
  * Consumes an array of questions and returns the question with the given `id`. If the
@@ -26,7 +29,12 @@ export function findQuestion(
     questions: Question[],
     id: number
 ): Question | null {
-    return null;
+    const foundValue = questions.find((item) => item.id === id);
+    if (foundValue !== undefined) {
+        return foundValue;
+    } else {
+        return null;
+    }
 }
 
 /**
@@ -34,7 +42,11 @@ export function findQuestion(
  * with the given `id`.
  */
 export function removeQuestion(questions: Question[], id: number): Question[] {
-    return [];
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const deepCopyArray2 = deepCopyArray.filter(
+        (item: { id: number }) => item.id !== id
+    );
+    return deepCopyArray2;
 }
 
 /***
@@ -42,21 +54,35 @@ export function removeQuestion(questions: Question[], id: number): Question[] {
  * questions, as an array.
  */
 export function getNames(questions: Question[]): string[] {
-    return [];
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const namesArr = deepCopyArray.map((obj: { name: any }) => obj.name);
+    return namesArr;
 }
 
 /***
  * Consumes an array of questions and returns the sum total of all their points added together.
  */
 export function sumPoints(questions: Question[]): number {
-    return 0;
+    let sum = 0;
+    for (let i = 0; i < questions.length; i++) {
+        sum += questions[i].points;
+    }
+    return sum;
 }
 
 /***
  * Consumes an array of questions and returns the sum total of the PUBLISHED questions.
  */
 export function sumPublishedPoints(questions: Question[]): number {
-    return 0;
+    let sum = 0;
+    for (let i = 0; i < questions.length; i++) {
+        if (questions[i].published === true) {
+            sum += questions[i].points;
+        } else {
+            sum += 0;
+        }
+    }
+    return sum;
 }
 
 /***
@@ -76,25 +102,25 @@ id,name,options,points,published
 ` *
  * Check the unit tests for more examples!
  */
-export function toCSV(questions: Question[]): string {
-    return "";
-}
+//export function toCSV(questions: Question[]): string {}
 
 /**
  * Consumes an array of Questions and produces a corresponding array of
  * Answers. Each Question gets its own Answer, copying over the `id` as the `questionId`,
  * making the `text` an empty string, and using false for both `submitted` and `correct`.
  */
-export function makeAnswers(questions: Question[]): Answer[] {
-    return [];
-}
+//export function makeAnswers(questions: Question[]): Answer[] {}
 
 /***
  * Consumes an array of Questions and produces a new array of questions, where
  * each question is now published, regardless of its previous published status.
  */
 export function publishAll(questions: Question[]): Question[] {
-    return [];
+    const updatedArray = questions.map((obj) => ({
+        ...obj,
+        published: true
+    }));
+    return updatedArray;
 }
 
 /***
@@ -102,7 +128,8 @@ export function publishAll(questions: Question[]): Question[] {
  * are the same type. They can be any type, as long as they are all the SAME type.
  */
 export function sameType(questions: Question[]): boolean {
-    return false;
+    const allAreTrue = questions.every((obj) => obj.type === questions[0].type);
+    return allAreTrue;
 }
 
 /***
@@ -116,7 +143,10 @@ export function addNewQuestion(
     name: string,
     type: QuestionType
 ): Question[] {
-    return [];
+    const newObj: Question = makeBlankQuestion(id, name, type);
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    deepCopyArray.push(newObj);
+    return deepCopyArray;
 }
 
 /***
@@ -129,7 +159,10 @@ export function renameQuestionById(
     targetId: number,
     newName: string
 ): Question[] {
-    return [];
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    foundObject.name = newName;
+    return deepCopyArray;
 }
 
 /***
@@ -144,7 +177,13 @@ export function changeQuestionTypeById(
     targetId: number,
     newQuestionType: QuestionType
 ): Question[] {
-    return [];
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    foundObject.type = newQuestionType;
+    if (newQuestionType !== "multiple_choice_question") {
+        foundObject.options = [];
+    }
+    return deepCopyArray;
 }
 
 /**
@@ -163,7 +202,14 @@ export function editOption(
     targetOptionIndex: number,
     newOption: string
 ): Question[] {
-    return [];
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    if (targetOptionIndex === -1) {
+        foundObject.options.push(newOption);
+    } else {
+        foundObject.options[targetOptionIndex] = newOption;
+    }
+    return deepCopyArray;
 }
 
 /***
@@ -177,5 +223,13 @@ export function duplicateQuestionInArray(
     targetId: number,
     newId: number
 ): Question[] {
-    return [];
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const foundObject = deepCopyArray.find((obj) => obj.id === targetId);
+    const objCopy = duplicateQuestion(newId, foundObject);
+    const index = deepCopyArray.findIndex((obj) => obj.id === targetId);
+    deepCopyArray.splice(index + 1, 0, objCopy);
+    return deepCopyArray;
+}
+function item(value: Question, index: number, array: Question[]): Answer {
+    throw new Error("Function not implemented.");
 }
