@@ -62,7 +62,7 @@ export function removeQuestion(questions: Question[], id: number): Question[] {
  */
 export function getNames(questions: Question[]): string[] {
     const deepCopyArray = JSON.parse(JSON.stringify(questions));
-    const namesArr = deepCopyArray.map((obj: { name: any }) => obj.name);
+    const namesArr = deepCopyArray.map((obj: { name: string }) => obj.name);
     return namesArr;
 }
 
@@ -270,6 +270,8 @@ export function duplicateQuestionInArray(
     deepCopyArray.splice(index + 1, 0, objCopy);
     return deepCopyArray;
 }
+/*
 function item(value: Question, index: number, array: Question[]): Answer {
     throw new Error("Function not implemented.");
 }
+*/
