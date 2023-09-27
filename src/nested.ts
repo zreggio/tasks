@@ -19,7 +19,14 @@ export function getPublishedQuestions(questions: Question[]): Question[] {
  * considered "non-empty". An empty question has an empty string for its `body` and
  * `expected`, and an empty array for its `options`.
  */
-//export function getNonEmptyQuestions(questions: Question[]): Question[] {}
+export function getNonEmptyQuestions(questions: Question[]): Question[] {
+    return questions.filter(
+        (question) =>
+            question.body !== "" ||
+            question.expected !== "" ||
+            question.options.length > 0
+    );
+}
 
 /***
  * Consumes an array of questions and returns the question with the given `id`. If the
@@ -102,14 +109,37 @@ id,name,options,points,published
 ` *
  * Check the unit tests for more examples!
  */
-//export function toCSV(questions: Question[]): string {}
+export function toCSV(questions: Question[]): string {
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const str = "id,name,options,points,published\n";
+    const questionCSV = deepCopyArray
+        .map(
+            (item: Question): string =>
+                `${item.id},${item.name},${item.options.length},${
+                    item.points
+                },${item.published ? "true" : "false"}`
+        )
+        .join("\n");
+    return str + questionCSV;
+}
 
 /**
  * Consumes an array of Questions and produces a corresponding array of
  * Answers. Each Question gets its own Answer, copying over the `id` as the `questionId`,
  * making the `text` an empty string, and using false for both `submitted` and `correct`.
  */
-//export function makeAnswers(questions: Question[]): Answer[] {}
+export function makeAnswers(questions: Question[]): Answer[] {
+    const deepCopyArray = JSON.parse(JSON.stringify(questions));
+    const ansArrn: Answer[] = deepCopyArray.map(
+        (obj: Question): Answer => ({
+            questionId: obj.id,
+            text: "",
+            submitted: false,
+            correct: false
+        })
+    );
+    return ansArrn;
+}
 
 /***
  * Consumes an array of Questions and produces a new array of questions, where
