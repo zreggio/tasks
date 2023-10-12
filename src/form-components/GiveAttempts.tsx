@@ -1,48 +1,40 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 export function GiveAttempts(): JSX.Element {
-    const [attempts, setAttempts] = useState<number>(3);
-    const [request, setRequest] = useState<number>(0);
-    function updateRequest(event: React.ChangeEvent<HTMLInputElement>) {
-        const { value } = event.target;
-        if (`${Number(value)}` === `${parseInt(value)}`) {
-            setRequest(parseInt(value));
+    const [attemptCount, setAttemptCount] = useState<number>(3);
+    const [reqAttempts, setReqAttempts] = useState<string>("");
+
+    const gainAttempt = () => {
+        const reqNumber = parseInt(reqAttempts, 10);
+        if (!isNaN(reqNumber)) {
+            setAttemptCount((prev) => prev + reqNumber);
+            setReqAttempts("");
         }
-    }
-    function use(): void {
-        setAttempts(attempts - 1);
-    }
-    function gain(): void {
-        setAttempts(attempts + 1);
-    }
-    return (
-        <div>
-            <Form.Group controlId="formAttempts">
-                <Form.Label>Attempts:</Form.Label>
-                <span>{" " + attempts}</span>
-                <Form.Control
-                    type="number"
-                    value={request}
-                    onChange={updateRequest}
-                />
-            </Form.Group>
-            <Button onClick={use} disabled={!attempts}>
-                use
-            </Button>
-            <Button onClick={gain}>gain</Button>
-            <h3>Give Attempts</h3>
-        </div>
-    );
-}
-/*
-import React, { useState } from "react";
+    };
 
-export function GiveAttempts(): JSX.Element {
+    const useAttempt = () => {
+        if (attemptCount > 0) {
+            setAttemptCount((prev) => prev - 1);
+        }
+    };
+
     return (
         <div>
             <h3>Give Attempts</h3>
+            <p>Attempts left: {attemptCount}</p>
+
+            <input
+                type="number"
+                value={reqAttempts}
+                onChange={(e) => setReqAttempts(e.target.value)}
+                placeholder="Request more attempts"
+            />
+
+            <button onClick={gainAttempt}>Gain</button>
+            <button onClick={useAttempt} disabled={attemptCount === 0}>
+                Use
+            </button>
         </div>
     );
 }
-*/

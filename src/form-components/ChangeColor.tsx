@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-
 import { Form } from "react-bootstrap";
 
 export function ChangeColor(): JSX.Element {
-    //const [color, setColor] = useState<string>("red");
     const colors = [
         "red",
         "blue",
@@ -15,33 +13,38 @@ export function ChangeColor(): JSX.Element {
         "white",
         "black"
     ];
-    const [color, setColor] = useState<string>(colors[0]);
+    const [currColor, setColor] = useState<string>(colors[0]);
+
     return (
         <div>
             <h3>Change Color</h3>
-            {colors.map((item) => (
-                <Form.Check
-                    inline
+            {colors.map((color) => (
+                <label
                     key={color}
-                    type="radio"
-                    name="color"
-                    onChange={(e) => setColor(e.target.value)}
-                    id={`color-${item}`}
-                    label={item}
-                    value={item}
-                    checked={color === item}
-                    style={{ backgroundColor: color }}
-                />
-            ))}
-            <p>
-                You have chosen{" "}
-                <span
-                    style={{ backgroundColor: color }}
-                    data-testid="colored-box"
+                    style={{ display: "inline-block", marginRight: "8px" }}
                 >
+                    <input
+                        type="radio"
+                        name="color-options"
+                        value={color}
+                        checked={currColor === color}
+                        onChange={(e) => setColor(e.target.value)}
+                    />
                     {color}
-                </span>
-            </p>
+                </label>
+            ))}
+            <div
+                style={{
+                    backgroundColor: currColor,
+                    padding: "8px",
+                    marginTop: "8px",
+                    textAlign: "center",
+                    width: "120px"
+                }}
+                data-testid="colored-box"
+            >
+                {currColor}
+            </div>
         </div>
     );
 }

@@ -4,12 +4,12 @@ import { Form } from "react-bootstrap";
 export function EditMode(): JSX.Element {
     const [editMode, setEditMode] = useState<boolean>(false);
     const [name, setName] = useState<string>("Your Name");
-    const [isStudent, setIsStudent] = useState<boolean>(true);
+    const [student, setStudent] = useState<boolean>(true);
     function updateEditMode(event: React.ChangeEvent<HTMLInputElement>) {
         setEditMode(event.target.checked);
     }
     function updateStudent(event: React.ChangeEvent<HTMLInputElement>) {
-        setIsStudent(event.target.checked);
+        setStudent(event.target.checked);
     }
     function updateName(event: React.ChangeEvent<HTMLInputElement>) {
         setName(event.target.value);
@@ -28,7 +28,7 @@ export function EditMode(): JSX.Element {
                     type="checkbox"
                     id="is-student-check"
                     label="Is Student"
-                    checked={isStudent}
+                    checked={student}
                     onChange={updateStudent}
                 />
             )}
@@ -38,20 +38,9 @@ export function EditMode(): JSX.Element {
                 ) : (
                     name
                 )}{" "}
-                {!editMode && <>is{!isStudent ? " not" : ""} a student</>}
+                {!editMode && <>is{!student ? " not" : ""} a student</>}
             </span>
             <h3>Edit Mode</h3>
         </div>
     );
 }
-/*
-import React, { useState } from "react";
-
-export function EditMode(): JSX.Element {
-    return (
-        <div>
-            <h3>Edit Mode</h3>
-        </div>
-    );
-}
-*/
