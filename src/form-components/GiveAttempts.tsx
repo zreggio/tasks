@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Form } from "react-bootstrap";
 
 export function GiveAttempts(): JSX.Element {
     const [attemptCount, setAttemptCount] = useState<number>(3);
