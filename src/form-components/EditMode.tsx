@@ -2,45 +2,50 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 
 export function EditMode(): JSX.Element {
-    const [editMode, setEditMode] = useState<boolean>(false);
-    const [name, setName] = useState<string>("Your Name");
     const [student, setStudent] = useState<boolean>(true);
-    function updateEditMode(event: React.ChangeEvent<HTMLInputElement>) {
-        setEditMode(event.target.checked);
+    const [canEdit, setEditMode] = useState<boolean>(false);
+    const [name, setName] = useState<string>("Your Name");
+    function setisStudent(entered: React.ChangeEvent<HTMLInputElement>) {
+        setStudent(entered.target.checked);
     }
-    function updateStudent(event: React.ChangeEvent<HTMLInputElement>) {
-        setStudent(event.target.checked);
+    function setStudentName(entered: React.ChangeEvent<HTMLInputElement>) {
+        setName(entered.target.value);
     }
-    function updateName(event: React.ChangeEvent<HTMLInputElement>) {
-        setName(event.target.value);
+    function setCanEdit(entered: React.ChangeEvent<HTMLInputElement>) {
+        setEditMode(entered.target.checked);
     }
     return (
         <div>
-            <Form.Switch
-                type="switch"
-                id="edit-mode-check"
-                label="Edit Mode"
-                checked={editMode}
-                onChange={updateEditMode}
-            />
-            {editMode && (
-                <Form.Check
-                    type="checkbox"
-                    id="is-student-check"
-                    label="Is Student"
-                    checked={student}
-                    onChange={updateStudent}
-                />
-            )}
-            <span>
-                {editMode ? (
-                    <Form.Control value={name} onChange={updateName} />
-                ) : (
-                    name
-                )}{" "}
-                {!editMode && <>is{!student ? " not" : ""} a student</>}
-            </span>
             <h3>Edit Mode</h3>
+            <Form.Group>
+                <Form.Check
+                    id="CanEdit"
+                    type="switch"
+                    checked={canEdit}
+                    onChange={setCanEdit}
+                />
+                {canEdit && (
+                    <>
+                        <Form.Control
+                            value={name}
+                            onChange={setStudentName}
+                            disabled={!canEdit}
+                        />
+                        <Form.Label htmlFor="isStudent">student</Form.Label>
+                        <Form.Check
+                            name="student"
+                            id="isStudent"
+                            type="checkbox"
+                            disabled={!canEdit}
+                            checked={student}
+                            onChange={setisStudent}
+                        />
+                    </>
+                )}
+            </Form.Group>
+            <p>
+                {name} is {student ? "" : "not"} a student
+            </p>
         </div>
     );
 }
